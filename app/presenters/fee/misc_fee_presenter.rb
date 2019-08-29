@@ -11,6 +11,10 @@ class Fee::MiscFeePresenter < Fee::BaseFeePresenter
     super
   end
 
+  def vat_amount
+    h.number_to_currency VatRate.vat_amount(claim.misc_fees_total, claim.vat_date, calculate: claim.apply_vat?)
+  end
+
   private
 
   def agfs?

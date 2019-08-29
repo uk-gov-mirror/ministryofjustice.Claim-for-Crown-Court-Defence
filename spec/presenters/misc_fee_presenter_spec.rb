@@ -41,4 +41,13 @@ describe Fee::MiscFeePresenter do
     end
   end
 
+  context '#vat_amount' do
+    it 'returns the vat_amount rounded and formatted' do
+      allow(misc_fee.claim).to receive(:misc_fees_total).and_return 10.00
+      allow(misc_fee.claim).to receive(:vat_date).and_return Date.today
+      allow(misc_fee.claim).to receive(:apply_vat?).and_return true
+      expect(presenter.vat_amount).to eq('£2.00')
+    end
+  end
+
 end
