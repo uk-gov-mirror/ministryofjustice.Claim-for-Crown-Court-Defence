@@ -340,6 +340,8 @@ en:
       claim_creator: Claim creator
       providers_ref: Reference number
       providers_ref_hint: Your internal reference number for this claim
+      urn: 'URN'
+      urn_hint: The case urn 
     court: Court
     crown_court: Crown court
     transfer_court: Transfer court
@@ -1010,6 +1012,8 @@ en:
           case_offence: 'Case & offence'
           case_number: 'Case number'
           case_number_hint: For example T20170101
+          urn: 'URN'
+          urn_hint: The case urn 
           case_type: 'Case type'
           case_type_hint: For example Trial
           court: 'Court'
