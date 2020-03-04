@@ -285,6 +285,7 @@ class ExternalUsers::ClaimsController < ExternalUsers::ApplicationController
       :transfer_court_id,
       :transfer_case_number,
       :case_number,
+      :urn,
       :case_type_id,
       :offence_id,
       :travel_expense_additional_information,
