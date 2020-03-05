@@ -4,7 +4,7 @@ module API
       class BaseClaim < API::Entities::BaseEntity
         expose :uuid
         expose :supplier_number
-        expose :case_number
+        expose :case_number_or_urn, as: :case_number
         expose :last_submitted_at, format_with: :utc
         expose :adapted_advocate_category, as: :advocate_category
         expose :court, using: API::Entities::CCR::Court
@@ -67,6 +67,10 @@ module API
               memo << f if f.claimed?
             end
           end
+        end
+
+        def case_number_or_urn
+          case_number = object.case_number || object.urn
         end
       end
     end

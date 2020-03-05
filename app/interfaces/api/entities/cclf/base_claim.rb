@@ -4,7 +4,7 @@ module API
       class BaseClaim < API::Entities::BaseEntity
         expose :uuid
         expose :supplier_number
-        expose :case_number
+        expose :case_number_or_urn, as: :case_number
         expose  :first_day_of_trial,
                 :retrial_started_at,
                 :case_concluded_at,
@@ -43,6 +43,10 @@ module API
 
         def bills
           raise 'Implement in sub-class'
+        end
+
+        def case_number_or_urn
+          case_number = object.urn
         end
       end
     end
