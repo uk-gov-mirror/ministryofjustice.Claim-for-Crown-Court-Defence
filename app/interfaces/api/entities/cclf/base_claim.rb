@@ -46,7 +46,7 @@ module API
         end
 
         def case_number_or_urn
-          case_number = object.urn
+          case_number = object.case_number || object.urn
         end
       end
     end

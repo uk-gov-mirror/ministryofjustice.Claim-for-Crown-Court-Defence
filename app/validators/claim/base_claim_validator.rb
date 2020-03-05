@@ -73,6 +73,9 @@ class Claim::BaseClaimValidator < BaseValidator
   # must have a format of capital letter followed by 8 digits
   def validate_case_number
     @record.case_number&.upcase!
+    unless @record.case_number&.present? ^ @record.urn&.present?
+      @record.errors[:case_number] << "Enter a case number or urn, but not both"
+    end
     validate_pattern(:case_number, CASE_NUMBER_PATTERN, 'invalid')
   end
 
