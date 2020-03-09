@@ -15,6 +15,9 @@
           = sortable 'case_number', t('.case_number'), 'aria-label': t('.case_number_sort_label'), tabindex: 0, id: 'case_number'
 
         %th{ scope: 'col' }
+          = sortable 'urn', t('.urn'), 'aria-label': t('.urn_sort_label'), tabindex: 0, id: 'urn'
+
+        %th{ scope: 'col' }
           = sortable 'advocate', t('.advocate_litigator'), 'aria-label': t('.advocate_sort_label'), tabindex: 0, id: 'advocate'
 
         %th{ scope: 'col' }
@@ -40,6 +43,7 @@
         %th{ scope: 'col' }
           Sort by:
           = sortable 'case_number', t('.case_number'), 'aria-label': t('.case_number_sort_label'), tabindex: 0, id: 'case_number_ms'
+          = sortable 'urn', t('.urn'), 'aria-label': t('.urn_sort_label'), tabindex: 0, id: 'urn_ms'
           = sortable 'advocate', t('.advocate_litigator'), 'aria-label': t('.advocate_sort_label'), tabindex: 0, id: 'advocate_ms'
           = sortable 'total_inc_vat', t('.total'), 'aria-label': t('.total_inc_vat_sort_label'), tabindex: 0, id: 'total_inc_vat_ms'
           - if params[:action] == 'archived'
@@ -63,7 +67,8 @@
             - if claim.disk_evidence == true
               %span.disk-evidence
                 = t('.disk_evidence')
-
+          %td
+            = claim.urn
           %td
             = claim.external_user.name
           %td

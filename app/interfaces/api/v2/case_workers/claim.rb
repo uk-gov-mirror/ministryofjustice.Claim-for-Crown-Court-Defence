@@ -30,7 +30,7 @@ module API
 
           helpers do
             def search_options
-              options = %i[case_number maat_reference defendant_name]
+              options = %i[case_number urn maat_reference defendant_name]
               options << :case_worker_name_or_email if current_user.persona.admin?
               options
             end

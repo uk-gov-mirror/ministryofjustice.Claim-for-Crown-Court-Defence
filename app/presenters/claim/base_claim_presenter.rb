@@ -129,6 +129,10 @@ class Claim::BaseClaimPresenter < BasePresenter
     claim.case_number.blank? ? 'N/A' : claim.case_number
   end
 
+  def urn
+    claim.urn.blank? ? 'N/A' : claim.urn
+  end
+
   def unique_id
     "##{claim.id}"
   end

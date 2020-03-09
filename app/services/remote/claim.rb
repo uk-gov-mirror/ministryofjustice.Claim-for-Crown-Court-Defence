@@ -1,6 +1,7 @@
 module Remote
   class Claim < Base
     attr_accessor :case_number,
+                  :urn,
                   :state,
                   :type,
                   :last_submitted_at,

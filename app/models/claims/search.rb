@@ -3,6 +3,9 @@ module Claims::Search
     case_number: {
       query: 'claims.case_number ILIKE :term'
     },
+    urn: {
+      query: 'claims.urn ILIKE :term'
+    },
     defendant_name: {
       joins: :defendants,
       query: "lower(defendants.first_name || ' ' || defendants.last_name) ILIKE :term "

@@ -4,6 +4,7 @@ module API
       expose :id
       expose :uuid
       expose :case_number
+      expose :urn
       expose :state
       expose :type
       expose :last_submitted_at, format_with: :utc
