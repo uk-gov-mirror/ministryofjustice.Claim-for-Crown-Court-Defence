@@ -226,7 +226,7 @@ class ExternalUsers::ClaimsController < ExternalUsers::ApplicationController
   end
 
   def search_options
-    options = %i[case_number defendant_name]
+    options = %i[case_number urn defendant_name]
     options << :advocate_name if @external_user.admin?
     options
   end

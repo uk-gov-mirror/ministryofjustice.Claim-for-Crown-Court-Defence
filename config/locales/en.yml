@@ -378,7 +378,7 @@ en:
     start_claim: Start a new claim
     view_claim: View your claims
   hint:
-    search: for example case number, defendant name, advocate/litigator name
+    search: for example case number, urn, defendant name, advocate/litigator name
     search_caseworker: search for a first or last name
     search_users: search for a first or last name
   search:
@@ -1147,6 +1147,7 @@ en:
         total_inc_vat_sort_label: 'Sort by: Claimed amount'
         advocate_sort_label: 'Sort by: Provider name'
         case_number_sort_label: 'Sort by: Case number'
+        urn_sort_label: 'Sort by: URN'
         state_sort_label: 'Sort by: Claim status'
         case_number_label: "View %{claim_state} Claim, Case number: %{case_number}"
         show_count: 'Showing %{page_count} of %{total} claims'
@@ -1156,6 +1157,7 @@ en:
         messages: 'Messages'
         defendants: 'Defendants'
         case_number: 'Case number'
+        urn: 'URN'
         case_type: 'Case type'
         submission_date: 'Date submitted'
         authorised_date: 'Date authorised'
@@ -2415,8 +2417,8 @@ en:
         advocate_sort_label: 'Sort by: Provider name'
         case_number: Case number
         case_number_sort_label: 'Sort by: Case number'
-        urn: Urn
-        urn_sort_label: 'Sort by: Urn'
+        urn: URN
+        urn_sort_label: 'Sort by: URN'
         case_type: Case type
         case_type_sort_label: 'Sort by: Case type'
         defendants: Defendants
@@ -2436,7 +2438,7 @@ en:
         view_messages_label: "View Messages for Case number %{case_number}"
         view_with_messages: "View (%{message_count} new)"
       hint:
-        search: for example case number, urn, MAAT reference, defendant name, case worker name or email
+        search: for example case number, URN, MAAT reference, defendant name, case worker name or email
       interim_claim_info:
         fields: *interim_claim_info_fields
       show:

@@ -18,6 +18,9 @@
       %th{ scope: 'col' }
         = sortable 'case_number', t('.case_number'), 'aria-label': t('.case_number_sort_label'), tabindex: 0, id: 'case_number'
 
+      %th{ scope: 'col' }
+        = sortable 'urn', t('.urn'), 'aria-label': t('.urn_sort_label'), tabindex: 0, id: 'urn'
+
       - if current_user.persona.admin?
         %th{ scope: 'col' }
           = sortable 'advocate', t('.advocate_litigator'), 'aria-label': t('.advocate_sort_label'), tabindex: 0, id: 'advocate'
@@ -44,6 +47,7 @@
         %th{ scope: 'col' }
           Sort by:
           = sortable 'case_number', t('.case_number'), 'aria-label': t('.case_number_sort_label'), tabindex: 0, id: 'case_number_ms'
+          = sortable 'urn', t('.urn'), 'aria-label': t('.urn_sort_label'), tabindex: 0, id: 'urn_ms'
           - if current_user.persona.admin?
             = sortable 'advocate', t('.advocate_litigator'), 'aria-label': t('.advocate_sort_label'), tabindex: 0, id: 'advocate_ms'
           = sortable 'total_inc_vat', t('.total'), 'aria-label': t('.total_inc_vat_sort_label'), tabindex: 0, id: 'total_inc_vat_ms'
@@ -64,6 +68,9 @@
                       'aria-label': t('.case_number_label', claim_state: claim.state.humanize, case_number: claim.case_number)
             .providers-ref
               = claim.providers_ref
+          
+          %td{ 'data-label': t('.urn') }
+            = claim.urn
 
           - if current_user.persona.admin?
             %td{ 'data-label': t('.advocate_litigator') }
