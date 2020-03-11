@@ -59,6 +59,8 @@
                 = link_to t('.select_all'), '#', class: 'select-all', data: { 'all-checked': 'false' }, 'aria-label': t('.select_all_label')
               %th.case-number{ scope: 'col' }
                 = t('.case_number')
+              %th.case-number{ scope: 'col' }
+                = t('.urn')
               %th.court{ scope: 'col' }
                 = t('.court')
               %th{ scope: 'col' }
@@ -92,6 +94,8 @@
                         - if claim.disk_evidence == true
                           %span.disk-evidence
                             = t('.disk_evidence')
+                    %td{ 'data-label': t('.urn') }
+                      = claim.urn
                     %td{ 'data-label': t('.court') }
                       = claim.court.name
                     %td{ 'data-label': t('.defendants') }
