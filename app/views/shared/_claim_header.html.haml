@@ -1,11 +1,19 @@
 .claim-hgroup
   .grid-row
-    .column-one-third
-      %h1
-        = t('.case_number')
-        %span.case-number-header
-          = claim.case_number
-          %span.unique-id-small= claim.unique_id
+    - if !claim.common_platform_case?
+      .column-one-third
+        %h1
+          = t('.case_number')
+          %span.case-number-header
+            = claim.case_number
+            %span.unique-id-small= claim.unique_id
+    - else
+      .column-one-third
+        %h1
+          = t('.urn')
+          %span.case-number-header
+            = claim.urn
+            %span.unique-id-small= claim.unique_id
     .column-one-third
       .claim-status{ tabindex: 0 }
         = t('.status')

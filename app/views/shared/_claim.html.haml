@@ -70,6 +70,12 @@
         %span.unique-id-small
           = claim.unique_id
 
+    %tr
+      %th{ scope: 'row' }
+        =t('.urn')
+      %td
+        = claim.urn
+
     - if claim.transfer_court.present?
       %tr
         %th{ scope: 'row' }

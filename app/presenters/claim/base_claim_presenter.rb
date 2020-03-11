@@ -129,10 +129,6 @@ class Claim::BaseClaimPresenter < BasePresenter
     claim.case_number.blank? ? 'N/A' : claim.case_number
   end
 
-  def urn
-    claim.urn.blank? ? 'N/A' : claim.urn
-  end
-
   def unique_id
     "##{claim.id}"
   end
@@ -393,6 +389,14 @@ class Claim::BaseClaimPresenter < BasePresenter
 
   def fixed_fees_gross
     h.number_to_currency(raw_fixed_fees_gross)
+  end
+
+  def common_platform_case?
+    claim.urn.present?
+  end
+
+  def urn
+    claim.urn.blank? ? 'N/A' : claim.urn
   end
 
   private
