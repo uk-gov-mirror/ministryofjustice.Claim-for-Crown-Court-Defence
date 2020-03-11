@@ -223,6 +223,7 @@ en:
         offence: 'Offence'
         court: 'Court'
         case_number: 'Case number'
+        urn: 'URN'
         transfer_case_number: 'Transfer case number'
         case_type: 'Case type'
         advocate_category: 'Advocate category'
@@ -1012,6 +1013,7 @@ en:
           case_offence: 'Case & offence'
           case_number: 'Case number'
           case_number_hint: For example T20170101
+          urn: 'URN'
           case_type: 'Case type'
           case_type_hint: For example Trial
           court: 'Court'
@@ -1795,6 +1797,7 @@ en:
     not_available: 'not available'
     claim_header:
       case_number: 'Case number:'
+      urn: 'URN:'
       status: 'Status:'
       assessment_date: 'Claim assessed date:'
       defendant_names: 'Defendant names:'
@@ -1849,6 +1852,7 @@ en:
       case: Case
       case_cracked: Case cracked in
       case_num: Case number
+      urn: URN
       case_type: Case type
       case_worker: Case worker
       defendant: Defendant names
@@ -2290,6 +2294,7 @@ en:
           court: 'Court'
           select: 'Select'
           case_number: 'Case #'
+          urn: URN
           allocated_to: 'Allocated To'
           type: 'Type'
           scheme: Scheme

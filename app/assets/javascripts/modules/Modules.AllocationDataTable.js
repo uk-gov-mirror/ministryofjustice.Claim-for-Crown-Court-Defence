@@ -129,18 +129,21 @@ moj.Modules.AllocationDataTable = {
 
     }, {
       targets: 2,
-      data: 'court_name'
+      data: 'urn'
     }, {
       targets: 3,
-      data: 'defendants'
+      data: 'court_name'
     }, {
       targets: 4,
+      data: 'defendants'
+    }, {
+      targets: 5,
       data: null,
       render: function (data, type, full) {
         return data.case_type + '<br/><span class="state-display">' + data.state_display + '</span>';
       }
     }, {
-      targets: 5,
+      targets: 6,
       data: null,
       render: {
         _: 'last_submitted_at',
@@ -149,7 +152,7 @@ moj.Modules.AllocationDataTable = {
         display: 'last_submitted_at_display'
       }
     }, {
-      targets: 6,
+      targets: 7,
       data: null,
       render: {
         _: 'total',

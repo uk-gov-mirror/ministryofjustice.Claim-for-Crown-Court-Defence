@@ -7,6 +7,7 @@ module API
       expose :scheme
       expose :scheme_type
       expose :case_number
+      expose :urn
       expose :state
       expose :state_display
       expose :court_name

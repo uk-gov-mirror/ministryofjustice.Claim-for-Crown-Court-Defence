@@ -17,6 +17,7 @@ module API::V2
             ELSE ltrim(replace(type, 'Claim', ''), '::')
           END AS scheme_type,
           c.case_number,
+          c.urn,
           c.state,
           court.name AS court_name,
           CASE
