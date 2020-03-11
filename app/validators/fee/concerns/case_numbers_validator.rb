@@ -25,7 +25,6 @@ module Fee
         if case_uplift?
           validate_case_numbers_presence
           validate_case_numbers_quantity_mismatch if claim.agfs?
-          validate_each_case_number
         else
           validate_absence(:case_numbers, 'present')
         end
@@ -40,20 +39,6 @@ module Fee
       def validate_case_numbers_quantity_mismatch
         return if case_numbers.blank?
         add_error(:case_numbers, 'noc_qty_mismatch') if case_numbers.split(',').size != quantity
-      end
-
-      def validate_each_case_number
-        return if case_numbers.blank?
-
-        case_numbers.split(',').each do |case_number|
-          case_number = case_number.strip
-          validate_case_number(case_number)
-        end
-      end
-
-      def validate_case_number(case_number)
-        add_error(:case_numbers, 'invalid') unless case_number.match?(CASE_NUMBER_PATTERN)
-        add_error(:case_numbers, 'eqls_claim_case_number') if case_number.casecmp?(claim.case_number)
       end
     end
   end

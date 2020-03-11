@@ -944,7 +944,7 @@ en:
               Please enter the number of pages of prosecution evidence to help the caseworker assess the correct offence class.
 
         additional_fee_fields:
-          case_numbers: Additional case numbers
+          case_numbers: Additional case numbers or URNs
           quantity: *quantity
           quantity_hint: *empty_input
           add_date_attended: Add another date
