@@ -277,42 +277,32 @@ With your local rails server running you can browse to ```http://localhost:3000/
 
 ## Anonymised Database Dumps/restores
 
-*WARNING:* not tested since hosting migration
-
-In order to copy the live database, anonymising all entries, execute the following command:
+In order to copy the live database, anonymising all entries, first exec onto one of the production pods:
 
 ```bash
-$ ./script/db_dump.rb <ssh-username> <environment> [<ip_address>]
+kubectl -n <kubernetes-namespace> exec -it <pod-name> sh
 ```
 
-The ```environment``` parameter can be ```gamma```, ```staging```, ```dev```, ```demo```, etc.  The IP address is only required if there is no entry for ```environment``` in your ```/etc/hosts``` file.
-
-
-
-This will create a file in the root directory, e.g ```adp_gamma_dump.psql.gz```
-
-To restore this file to one of the other environments, type:
+Then run the dump_anonymised rake task:
 
 ```bash
-$ ./script/db_upload.rb <ssh-name> <environment> [<ip_address>] filename
+bundle exec rake db:dump_anonymised[<dump-file>]
 ```
 
-In this case, ```environment``` CANNOT be gamma.
+This will create a file in the /usr/src/app/tmp directory, e.g 
 
+```<dump-file>.gz```
+
+This file can then be copied onto your local machine:
+
+```bash
+kubectl -n <kubernetes-namespace> cp <pod-name>:/usr/src/app/tmp/<dump-file>.gz tmp/<dump-file>.gz
+```
 
 To load the database dump on to your local database, use:
 
 ```bash
 $ rake db:restore[dump-file]
-```
-
-Snippet for local dump and restore:
-
-```bash
-$ cd <cccd_root>
-$ ./script/db_dump.rb <sshusername> gamma <IP|knownhost>
-$ rake db:restore['adp_gamma_dump.psql.gz']
-$ rm adp_gamma_dump.psql
 ```
 
 ## VAT
