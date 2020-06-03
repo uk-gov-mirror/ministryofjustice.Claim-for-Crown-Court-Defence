@@ -1,0 +1,30 @@
+-# https://design-system.service.gov.uk/components/button/
+-# Example
+-# I have identified three different link types/classes
+-# plus, we may wish to have app specific style
+-# this component is a partial that can be extended with local_assigns
+-# to be discussed
+
+
+- klass = '' unless local_assigns[:klass]
+- klass += ' govuk-skip-link' if local_assigns[:skip_link] == true
+- klass += ' govuk-back-link' if local_assigns[:back_link] == true
+- klass += ' govuk-footer__link' if local_assigns[:footer_link] == true
+
+
+%a{ class: klass, href: local_assigns[:href] }
+  = local_assigns[:body]
+
+-# ^^ haml link
+-# OR
+-# vv rails url helper
+
+= link_to local_assigns[:body], local_assigns[:href], class: klass
+
+
+
+-# Usage
+-# = render 'components/govuk_link', { body: 'BBC', href: 'https://www.bbc.co.uk' }
+-# = render 'components/govuk_link', { body: 'BBC', href: 'https://www.bbc.co.uk', klass: 'app-specific' }
+-# = render 'components/govuk_link', { body: 'BBC', href: 'https://www.bbc.co.uk', back_link: true }
+-# = render 'components/govuk_link', { body: 'BBC', href: 'https://www.bbc.co.uk', klass: 'app-specific', back_link: true }
