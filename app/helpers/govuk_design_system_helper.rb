@@ -10,9 +10,17 @@
 module GovukDesignSystemHelper
   def govuk_link( body = nil, url = nil, type = nil, html_options = {} )
     classes = html_options[:class].present? ? html_options[:class].split(' ') : []
+    case type
+    when "govuk-skip-link"
+      classes  << "govuk-skip-link"
+    when "govuk-back-link"
+      classes  << 'govuk-back-link'
+    when "govuk-footer__link"
+      classes  << "govuk-back-link"
+    end
     html_options.merge!(class: classes.join(' '))
     # link_to body, url, html_options
-
+ 
     content_tag :a, url, html_options do
       body
     end
