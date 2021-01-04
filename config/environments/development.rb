@@ -1,6 +1,8 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  STORAGE_OPTION = :paperclip
+
   PAPERCLIP_STORAGE_OPTIONS = {
     storage: :filesystem,
     path: "public/assets/dev/images/docs/:id_partition/:filename",

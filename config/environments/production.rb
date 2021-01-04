@@ -1,6 +1,8 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  STORAGE_OPTION = :paperclip
+
   PAPERCLIP_STORAGE_OPTIONS = {
     storage: :s3,
     s3_credentials: 'config/aws.yml',

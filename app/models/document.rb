@@ -31,23 +31,6 @@ class Document < ApplicationRecord
   belongs_to :creator, class_name: 'ExternalUser'
   belongs_to :claim, class_name: 'Claim::BaseClaim'
 
-  validates_attachment :document,
-                       presence: { message: 'Document must have an attachment' },
-                       size: { in: 0.megabytes..20.megabytes },
-                       content_type: {
-                         content_type: ['application/pdf',
-                                        'application/msword',
-                                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                                        'application/vnd.oasis.opendocument.text',
-                                        'text/rtf',
-                                        'application/rtf',
-                                        'image/jpeg',
-                                        'image/png',
-                                        'image/tiff',
-                                        'image/bmp',
-                                        'image/x-bitmap']
-                       }
-
   alias attachment document # to have a consistent interface to both Document and Message
   delegate :provider_id, to: :external_user
 

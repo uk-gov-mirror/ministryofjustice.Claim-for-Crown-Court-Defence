@@ -27,9 +27,12 @@ module Stats
     scope :management_information, -> { not_errored.where(report_name: 'management_information') }
     scope :provisional_assessment, -> { not_errored.where(report_name: 'provisional_assessment') }
 
-    has_attached_file :document, s3_headers.merge(REPORTS_STORAGE_OPTIONS)
-
-    validates_attachment_content_type :document, content_type: ['text/csv']
+    if STORAGE_OPTION == :paperclip
+      has_attached_file :document, s3_headers.merge(REPORTS_STORAGE_OPTIONS)
+      validates_attachment_content_type :document, content_type: ['text/csv']
+    else
+      has_one_attached :document
+    end
 
     def self.clean_up(report_name)
       destroy_reports_older_than(report_name, 1.month.ago)
