@@ -42,6 +42,9 @@ RSpec.describe Document, type: :model do
 
   it_behaves_like 'an s3 bucket'
 
+  it_behaves_like 'active storage migration for', :document
+  it_behaves_like 'active storage migration for', :converted_preview_document
+
   it do
     should validate_attachment_content_type(:document).
       allowing('application/pdf',

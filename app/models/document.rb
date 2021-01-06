@@ -26,6 +26,7 @@
 class Document < ApplicationRecord
   include DocumentAttachment
   include Duplicable
+  include ActiveStorageMigration
 
   belongs_to :external_user
   belongs_to :creator, class_name: 'ExternalUser'

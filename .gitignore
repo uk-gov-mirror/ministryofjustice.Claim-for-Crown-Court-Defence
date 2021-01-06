@@ -75,3 +75,5 @@ kube*/**/temp*secret*.*
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+storage/

@@ -16,6 +16,7 @@
 
 class Message < ApplicationRecord
   include S3Headers
+  include ActiveStorageMigration
 
   belongs_to :claim, class_name: 'Claim::BaseClaim'
   belongs_to :sender, class_name: 'User', inverse_of: :messages_sent

@@ -13,6 +13,7 @@
 module Stats
   class StatsReport < ApplicationRecord
     include S3Headers
+    include ActiveStorageMigration
 
     TYPES = %w[management_information provisional_assessment rejections_refusals].freeze
 

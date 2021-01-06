@@ -1,6 +1,7 @@
 module DocumentAttachment
   extend ActiveSupport::Concern
   include S3Headers
+  include ActiveStorageMigration
 
   included do
     attr_accessor :pdf_tmpfile

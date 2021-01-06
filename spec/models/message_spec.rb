@@ -29,6 +29,8 @@ RSpec.describe Message, type: :model do
 
   it_behaves_like 'an s3 bucket'
 
+  it_behaves_like 'active storage migration for', :attachment
+
   it do
      should validate_attachment_content_type(:attachment).
        allowing('application/pdf',
