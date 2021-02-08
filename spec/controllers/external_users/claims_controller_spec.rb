@@ -552,7 +552,10 @@ RSpec.describe ExternalUsers::ClaimsController, type: :controller do
     context 'with a rejected claim' do
       subject(:claim) do
         create(:rejected_claim, external_user: advocate).tap do |c|
-          c.documents << build_list(:document, 2, :verified, claim: c, document_file_size: 5000000)
+          # longer_lorem.pdf - 49993 bytes
+          c.documents << build(:document, verified: true, claim: c)
+          # shorter_lorem.docx - 14713 bytes
+          c.documents << build(:document, :docx, verified: true, claim: c)
         end
       end
 
@@ -599,13 +602,15 @@ RSpec.describe ExternalUsers::ClaimsController, type: :controller do
         end
 
         it 'logs an error' do
-          expect(LogStuff).to \
-            have_received(:error).with('ExternalUsers::ClaimsController',
-                                       action: 'clone',
-                                       claim_id: claim.id,
-                                       documents: 2,
-                                       total_size: '9.54 MB',
-                                       error: 'Timeout::Error: execution expired')
+          expect(LogStuff).to have_received(:error)
+            .with(
+              'ExternalUsers::ClaimsController',
+              action: 'clone',
+              claim_id: claim.id,
+              documents: 2,
+              total_size: '63.2 KB',
+              error: 'Timeout::Error: execution expired'
+            )
         end
 
         it 'displays a flash alert' do
