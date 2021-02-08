@@ -58,17 +58,24 @@ RSpec.describe DocumentsController, type: :controller do
   end
 
   shared_examples 'view document' do
-    let(:service_url) { 'https://example.com/document.pdf' }
+    let(:disk_service_prefix) { 'rails/active_storage/disk' }
 
     context 'with a document owned by the logged in user' do
-      let(:document) { create :document, external_user: external_user }
+      let(:document) do
+        create :document,
+               external_user: external_user,
+               document: Rack::Test::UploadedFile.new(
+                 File.expand_path('features/examples/shorter_lorem.docx', Rails.root),
+                 'application/msword'
+               )
+      end
 
       before do
-        allow_any_instance_of(ActiveStorage::Blob).to receive(:service_url).and_return(service_url)
+        view_document
       end
 
       it 'redirects to the attachment' do
-        expect(view_document).to redirect_to service_url
+        expect(response.location).to match %r{#{disk_service_prefix}/.*/#{filename}}
       end
     end
 
@@ -92,18 +99,17 @@ RSpec.describe DocumentsController, type: :controller do
   end
 
   describe 'GET #show' do
-    # TODO: 1) The shared examples test that the user is redirected to a
-    #       download link but it is not check that it is the link for
-    #       converted_preview_document.
-    #       2) There isn't a test for whether the disposition is 'attachment'
-    #       or 'inline'.
     subject(:view_document) { get :show, params: { id: document.id } }
+
+    let(:filename) { 'shorter_lorem.docx.pdf' }
 
     include_examples 'view document'
   end
 
   describe 'GET #download' do
     subject(:view_document) { get :download, params: { id: document.id } }
+
+    let(:filename) { 'shorter_lorem.docx' }
 
     include_examples 'view document'
   end
