@@ -71,9 +71,13 @@ module DocumentAttachment
 
   # TODO: Remove this method, which exists for backward compatibility with Paperclip
   def copy_file_name
-    self.document_file_name = document.filename.to_s
-    self.document_file_size = document.byte_size
-    self.converted_preview_document_file_name = document.filename.to_s
-    self.converted_preview_document_file_size = document.byte_size
+    if document.attached?
+      self.document_file_name = document.filename.to_s
+      self.document_file_size = document.byte_size
+    end
+    if converted_preview_document.attached?
+      self.converted_preview_document_file_name = converted_preview_document.filename.to_s
+      self.converted_preview_document_file_size = converted_preview_document.byte_size
+    end
   end
 end
