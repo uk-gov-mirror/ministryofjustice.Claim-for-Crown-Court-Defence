@@ -118,7 +118,7 @@ RSpec.describe Document, type: :model do
     end
   end
 
-  context '#save!' do
+  describe '#save!' do
     subject { build(:document, :docx, document_content_type: 'application/msword') }
 
     it 'depends on the Libreconv gem' do
@@ -153,17 +153,11 @@ RSpec.describe Document, type: :model do
     end
   end
 
-  context '#copy_from' do
+  describe '#copy_from' do
     subject(:new_document) { build(:document, :empty) }
 
-    let(:file) do
-      Rack::Test::UploadedFile.new(
-        File.expand_path('features/examples/longer_lorem.pdf', Rails.root),
-        'application/pdf'
-      )
-    end
     let(:verified) { true }
-    let(:old_document) { create :document, document: file, verified: verified }
+    let(:old_document) { create :document, :with_preview, verified: verified }
 
     before { new_document.copy_from old_document }
 
@@ -196,6 +190,35 @@ RSpec.describe Document, type: :model do
 
       it 'sets the new document as not verified' do
         expect(new_document.verified).to be_falsey
+      end
+    end
+  end
+
+  describe '#convert_document!' do
+    subject(:convert_document) { document.convert_document! }
+
+    before { convert_document }
+
+    context 'with a pdf file' do
+      let(:document) { build :document }
+
+      it 'attaches the document as the converted preview document' do
+        expect(document.converted_preview_document.blob)
+          .to eq document.document.blob
+      end
+    end
+
+    context 'with a docx file' do
+      let(:document) { create :document, :docx }
+
+      it 'creates a converted file with content type application/pdf' do
+        expect(document.converted_preview_document.content_type)
+          .to eq 'application/pdf'
+      end
+
+      it 'appends .pdf to the filename for the converted file' do
+        expect(document.converted_preview_document.filename)
+          .to eq "#{document.document.filename}.pdf"
       end
     end
   end
