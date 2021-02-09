@@ -78,57 +78,17 @@ RSpec.describe Document, type: :model do
     end
   end
 
-  describe '#converted_preview_document' do
-    subject(:preview_document) { document.converted_preview_document }
-
-    let(:document) { create :document, document: file }
-
-    context 'with a pdf document' do
-      let(:file) do
-        Rack::Test::UploadedFile.new(
-          File.expand_path('features/examples/longer_lorem.pdf', Rails.root),
-          'application/pdf'
-        )
-      end
-
-      it 'is identical to #document' do
-        expect(preview_document.checksum).to eq document.document.checksum
-      end
-    end
-
-    context 'with a docx document' do
-      let(:file) do
-        Rack::Test::UploadedFile.new(
-          File.expand_path('features/examples/shorter_lorem.docx', Rails.root),
-          'application/msword'
-        )
-      end
-
-      it 'is different from #document' do
-        expect(preview_document.checksum).not_to eq document.document.checksum
-      end
-
-      it 'is a PDF file' do
-        expect(preview_document.content_type).to eq 'application/pdf'
-      end
-
-      it 'is named after the original file' do
-        expect(preview_document.filename.to_s).to eq 'shorter_lorem.docx.pdf'
-      end
-    end
-  end
-
   describe '#save!' do
-    subject { build(:document, :docx, document_content_type: 'application/msword') }
+    subject(:document_save) { document.save! }
 
-    it 'depends on the Libreconv gem' do
-      expect(Libreconv).to receive(:convert)
-      subject.save!
-    end
+    let(:document) { build(:document, :docx, document_content_type: 'application/msword') }
 
-    it 'handles IOError when Libreconv is not in PATH' do
-      allow(Libreconv).to receive(:convert).and_raise(IOError) # raise IOError as if Libreoffice exe were not found
-      expect { subject.save! }.to change(Document, :count).by(1) # error handled and document is still saved
+    before { ActiveJob::Base.queue_adapter = :test }
+
+    it 'schedules a CreateDocumentPreviewJob for the document' do
+      expect { document_save }
+        .to have_enqueued_job(CreateDocumentPreviewJob)
+        .with(document.to_param)
     end
   end
 
@@ -154,38 +114,61 @@ RSpec.describe Document, type: :model do
   end
 
   describe '#copy_from' do
-    subject(:new_document) { build(:document, :empty) }
+    subject(:copy_file) { new_document.copy_from old_document }
 
     let(:verified) { true }
-    let(:old_document) { create :document, :with_preview, verified: verified }
-
-    before { new_document.copy_from old_document }
+    let(:trait) { :with_preview }
+    let(:old_document) { create :document, trait, verified: verified }
+    let(:new_document) { build(:document, :empty) }
 
     it 'copies the document from the old document' do
+      copy_file
       expect(new_document.document.checksum).to eq old_document.document.checksum
     end
 
     it 'copies the document filename from the old document' do
+      copy_file
       expect(new_document.document.filename).to eq old_document.document.filename
     end
 
-    it 'copies the document preview from the old document' do
-      expect(new_document.converted_preview_document.checksum)
-        .to eq old_document.converted_preview_document.checksum
+    context 'when the document preview exists' do
+      before { copy_file }
+
+      it 'copies the document preview from the old document' do
+        expect(new_document.converted_preview_document.checksum)
+          .to eq old_document.converted_preview_document.checksum
+      end
+
+      it 'copies the document preview filename from the old document' do
+        expect(new_document.converted_preview_document.filename)
+          .to eq old_document.converted_preview_document.filename
+      end
     end
 
-    it 'copies the document preview filename from the old document' do
-      expect(new_document.converted_preview_document.filename)
-        .to eq old_document.converted_preview_document.filename
+    context 'when the document preview does not exist' do
+      let(:trait) { :docx }
+
+      before { ActiveJob::Base.queue_adapter = :test }
+
+      it 'schedules a CreateDocumentPreviewJob for the document' do
+        old_document # Preload old document to avoid two jobs being enqueued
+        expect { copy_file }
+          .to have_enqueued_job(CreateDocumentPreviewJob)
+          .with(new_document.to_param)
+      end
     end
 
     context 'when the document is verified' do
+      before { copy_file }
+
       it 'sets the new document as verified' do
         expect(new_document.verified).to be_truthy
       end
     end
 
     context 'when the document is not verified' do
+      before { copy_file }
+
       let(:verified) { false }
 
       it 'sets the new document as not verified' do
@@ -197,10 +180,19 @@ RSpec.describe Document, type: :model do
   describe '#convert_document!' do
     subject(:convert_document) { document.convert_document! }
 
-    before { convert_document }
+    before do
+      allow(Libreconv).to receive(:convert) do |_original, output|
+        File.open(File.expand_path('features/examples/shorter_lorem.pdf', Rails.root), 'rb') do |input|
+          IO.copy_stream(input, output)
+        end
+        output.rewind
+      end
+    end
 
     context 'with a pdf file' do
       let(:document) { build :document }
+
+      before { convert_document }
 
       it 'attaches the document as the converted preview document' do
         expect(document.converted_preview_document.blob)
@@ -211,6 +203,8 @@ RSpec.describe Document, type: :model do
     context 'with a docx file' do
       let(:document) { create :document, :docx }
 
+      before { convert_document }
+
       it 'creates a converted file with content type application/pdf' do
         expect(document.converted_preview_document.content_type)
           .to eq 'application/pdf'
@@ -219,6 +213,16 @@ RSpec.describe Document, type: :model do
       it 'appends .pdf to the filename for the converted file' do
         expect(document.converted_preview_document.filename)
           .to eq "#{document.document.filename}.pdf"
+      end
+    end
+
+    context 'when Libreconv is not in PATH' do
+      let(:document) { create :document, :docx }
+
+      before { allow(Libreconv).to receive(:convert).and_raise(IOError) }
+
+      it 'raises and error to retry the job' do
+        expect { convert_document }.to raise_error(DocumentAttachment::LibreconfFailed)
       end
     end
   end

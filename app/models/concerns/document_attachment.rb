@@ -2,6 +2,8 @@ module DocumentAttachment
   extend ActiveSupport::Concern
   include S3Headers
 
+  class LibreconfFailed < StandardError; end
+
   included do
     attr_accessor :pdf_tmpfile
 
@@ -9,6 +11,7 @@ module DocumentAttachment
     has_one_attached :document
 
     before_save :copy_file_name
+    after_save :create_preview_document
 
     validates :converted_preview_document, content_type: 'application/pdf'
     validates :document,
@@ -30,11 +33,7 @@ module DocumentAttachment
   end
 
   def create_preview_document
-    if document.content_type == 'application/pdf'
-      self.converted_preview_document = document.blob
-    else
-      convert_document_to_pdf
-    end
+    CreateDocumentPreviewJob.perform_later(self.to_param)
   end
 
   def convert_document!
@@ -58,8 +57,7 @@ module DocumentAttachment
       )
     end
   rescue IOError
-    # TODO: What to do with this now?
-    nil
+    raise LibreconfFailed
   end
 
   # TODO: Remove this method, which exists for backward compatibility with Paperclip
