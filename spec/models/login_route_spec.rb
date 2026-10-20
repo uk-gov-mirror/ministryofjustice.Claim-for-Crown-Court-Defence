@@ -1,6 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe LoginRoute do
+  it 'does not approve new accounts for dual-login testing by default' do
+    expect(create(:user).login_route).not_to be_dual_login_tester
+  end
+
+  [true, false].each do |approved|
+    it "keeps tester approval #{approved} independent of the login method" do
+      route = create(:user).login_route
+      route.update!(login_method: LoginRoute::ENTRA, dual_login_tester: !approved)
+      route.update!(dual_login_tester: approved)
+      expect(route.reload.login_method).to eq LoginRoute::ENTRA
+    end
+  end
+
   it 'rejects unknown login methods' do
     expect(build(:login_route, login_method: 'magic')).not_to be_valid
   end
@@ -27,7 +40,7 @@ RSpec.describe LoginRoute do
     end
 
     it 'defaults to legacy for a user without a route' do
-      create(:user, email: 'unrouted@example.com')
+      create(:user, email: 'unrouted@example.com').login_route.destroy!
       expect(described_class.method_for('unrouted@example.com')).to eq LoginRoute::LEGACY
     end
 

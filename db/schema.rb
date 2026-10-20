@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_02_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_20_113000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "uuid-ossp"
@@ -422,6 +422,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_090000) do
 
   create_table "login_routes", id: :serial, force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.boolean "dual_login_tester", default: false, null: false
     t.string "login_method", default: "legacy", null: false
     t.datetime "updated_at", null: false
   end
